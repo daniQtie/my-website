@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emma & James Wedding Invitation</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#FF6B6B',secondary:'#FFE2E2'},borderRadius:{'none':'0px','sm':'8px',DEFAULT:'12px','md':'16px','lg':'20px','xl':'24px','2xl':'28px','3xl':'32px','full':'9999px','button':'12px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Playfair Display', serif;
+background-color: #FFF9F9;
+overflow-x: hidden;
+}
+.dancing-script {
+font-family: 'Dancing Script', cursive;
+}
+.playfair {
+font-family: 'Playfair Display', serif;
+}
+.video-container {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: 50;
+background-color: #000;
+transition: opacity 1s ease-in-out;
+}
+.video-container.hidden {
+opacity: 0;
+pointer-events: none;
+}
+#videoPlayer {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+  
+.cta-button {
+position: fixed;
+top: 80%;
+left: 50%;
+transform: translate(-50%, -50%); 
+z-index: 60;
+transition: all 0.5s ease-in-out;
+animation: pulse 2s infinite;
+}
+.cta-button.hidden {
+opacity: 0;
+pointer-events: none;
+}
+@keyframes pulse {
+0% {
+box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+}
+70% {
+box-shadow: 0 0 0 15px rgba(255, 107, 107, 0);
+}
+100% {
+box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+}
+}
+.main-content {
+opacity: 0;
+transform: translateY(20px);
+transition: opacity 1s ease, transform 1s ease;
+pointer-events: none;
+}
+.main-content.visible {
+opacity: 1;
+transform: translateY(0);
+pointer-events: all;
+}
+.countdown-box {
+background-color: #FFE2E2;
+border-radius: 12px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+transition: transform 0.3s ease;
+}
+.countdown-box:hover {
+transform: translateY(-5px);
+}
+.gallery-image {
+transition: transform 0.3s ease;
+cursor: pointer;
+}
+.gallery-image:hover {
+transform: scale(1.03);
+}
+.lightbox {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.9);
+z-index: 100;
+display: flex;
+align-items: center;
+justify-content: center;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.3s ease;
+}
+.lightbox.active {
+opacity: 1;
+pointer-events: all;
+}
+.lightbox-image {
+max-width: 90%;
+max-height: 90%;
+object-fit: contain;
+}
+.close-lightbox {
+position: absolute;
+top: 20px;
+right: 20px;
+color: white;
+font-size: 30px;
+cursor: pointer;
+}
+.floral-decoration {
+position: absolute;
+width: 150px;
+height: 150px;
+background-size: contain;
+background-repeat: no-repeat;
+opacity: 0.6;
+}
+.top-left {
+top: 0;
+left: 0;
+transform: rotate(-30deg);
+}
+.top-right {
+top: 0;
+right: 0;
+transform: rotate(30deg);
+}
+.bottom-left {
+bottom: 0;
+left: 0;
+transform: rotate(30deg);
+}
+.bottom-right {
+bottom: 0;
+right: 0;
+transform: rotate(-30deg);
+}
+input, select, textarea {
+border: 1px solid #FFE2E2;
+transition: border-color 0.3s ease;
+}
+input:focus, select:focus, textarea:focus {
+border-color: #FF6B6B;
+outline: none;
+}
+@media (max-width: 768px) {
+.countdown-container {
+flex-wrap: wrap;
+}
+.countdown-box {
+width: calc(50% - 8px);
+margin-bottom: 16px;
+}
+.gallery-grid {
+grid-template-columns: repeat(2, 1fr);
+}
+}
+@media (max-width: 480px) {
+.countdown-box {
+width: calc(50% - 8px);
+}
+.gallery-grid {
+grid-template-columns: 1fr;
+}
+}
+</style>
+</head>
+<body>
+<!-- Video Container -->
+<div class="video-container">
+<video id="videoPlayer" autoplay loop>
+<source src="img/intro.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</div>
+<!-- CTA Button -->
+<button id="ctaButton" class="cta-button hidden bg-primary text-white px-8 py-4 text-xl font-semibold !rounded-button shadow-lg hover:scale-105 transition-transform">
+View Invitation
+</button>
+<!-- Main Content -->
+<div id="mainContent" class="main-content">
+<!-- Header with Names -->
+<header class="relative w-full py-20 bg-secondary bg-opacity-30 overflow-hidden">
+<div class="container mx-auto px-4 text-center relative z-10">
+<h1 class="dancing-script text-5xl md:text-7xl text-primary mb-4">Emma & James</h1>
+<p class="text-xl md:text-2xl text-gray-700 mb-6">Request the pleasure of your company</p>
+<p class="text-lg md:text-xl text-gray-700">as they join in marriage</p>
+<div class="w-32 h-1 bg-primary mx-auto my-8 rounded-full"></div>
+<p class="text-xl md:text-2xl text-gray-700 mb-2">Saturday, June 14, 2025</p>
+<p class="text-lg md:text-xl text-gray-700 mb-8">Four o'clock in the afternoon</p>
+<p class="text-lg md:text-xl text-gray-700">The Rose Garden</p>
+<p class="text-lg md:text-xl text-gray-700 mb-6">1234 Blossom Avenue, New York, NY</p>
+<p class="text-lg md:text-xl text-gray-700 italic">Reception to follow</p>
+</div>
+<!-- Floral Decorations -->
+<div class="floral-decoration top-left" style="background-image: url('https://readdy.ai/api/search-image?query=watercolor%20floral%20corner%20decoration%2C%20elegant%20roses%20and%20leaves%20in%20soft%20pink%20and%20red%20tones%2C%20romantic%20wedding%20design%20element%2C%20transparent%20background%2C%20delicate%20brushstrokes&width=300&height=300&seq=2&orientation=squarish')"></div>
+<div class="floral-decoration top-right" style="background-image: url('https://readdy.ai/api/search-image?query=watercolor%20floral%20corner%20decoration%2C%20elegant%20roses%20and%20leaves%20in%20soft%20pink%20and%20red%20tones%2C%20romantic%20wedding%20design%20element%2C%20transparent%20background%2C%20delicate%20brushstrokes&width=300&height=300&seq=3&orientation=squarish')"></div>
+<div class="floral-decoration bottom-left" style="background-image: url('https://readdy.ai/api/search-image?query=watercolor%20floral%20corner%20decoration%2C%20elegant%20roses%20and%20leaves%20in%20soft%20pink%20and%20red%20tones%2C%20romantic%20wedding%20design%20element%2C%20transparent%20background%2C%20delicate%20brushstrokes&width=300&height=300&seq=4&orientation=squarish')"></div>
+<div class="floral-decoration bottom-right" style="background-image: url('https://readdy.ai/api/search-image?query=watercolor%20floral%20corner%20decoration%2C%20elegant%20roses%20and%20leaves%20in%20soft%20pink%20and%20red%20tones%2C%20romantic%20wedding%20design%20element%2C%20transparent%20background%2C%20delicate%20brushstrokes&width=300&height=300&seq=5&orientation=squarish')"></div>
+</header>
+<!-- Countdown Section -->
+<section class="py-16 bg-white">
+<div class="container mx-auto px-4">
+<h2 class="text-3xl md:text-4xl text-center text-gray-800 mb-12 playfair">Counting Down to Our Special Day</h2>
+<div id="countdown" class="flex justify-center gap-4 countdown-container">
+<div class="countdown-box w-24 md:w-32 h-32 md:h-40 flex flex-col items-center justify-center">
+<span id="days" class="text-4xl md:text-5xl font-bold text-primary">00</span>
+<span class="text-sm md:text-base text-gray-600 mt-2">Days</span>
+</div>
+<div class="countdown-box w-24 md:w-32 h-32 md:h-40 flex flex-col items-center justify-center">
+<span id="hours" class="text-4xl md:text-5xl font-bold text-primary">00</span>
+<span class="text-sm md:text-base text-gray-600 mt-2">Hours</span>
+</div>
+<div class="countdown-box w-24 md:w-32 h-32 md:h-40 flex flex-col items-center justify-center">
+<span id="minutes" class="text-4xl md:text-5xl font-bold text-primary">00</span>
+<span class="text-sm md:text-base text-gray-600 mt-2">Minutes</span>
+</div>
+<div class="countdown-box w-24 md:w-32 h-32 md:h-40 flex flex-col items-center justify-center">
+<span id="seconds" class="text-4xl md:text-5xl font-bold text-primary">00</span>
+<span class="text-sm md:text-base text-gray-600 mt-2">Seconds</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Our Story Section -->
+<section class="py-16 bg-secondary bg-opacity-20">
+<div class="container mx-auto px-4">
+<h2 class="text-3xl md:text-4xl text-center text-gray-800 mb-12 playfair">Our Love Story</h2>
+<div class="flex flex-col md:flex-row items-center gap-8 mb-16">
+<div class="w-full md:w-1/2">
+<div class="rounded-lg overflow-hidden shadow-lg">
+<img src="https://readdy.ai/api/search-image?query=romantic%20couple%20in%20autumn%20park%2C%20warm%20golden%20light%2C%20candid%20moment%2C%20laughing%20together%2C%20holding%20hands%2C%20beautiful%20fall%20foliage%2C%20professional%20photography%2C%20soft%20bokeh%20background%2C%20genuine%20happiness&width=600&height=400&seq=6&orientation=landscape" alt="First Date" class="w-full h-auto object-cover">
+</div>
+</div>
+<div class="w-full md:w-1/2">
+<h3 class="text-2xl text-primary mb-4 dancing-script">How We Met</h3>
+<p class="text-gray-700 mb-4">Our paths crossed on a rainy afternoon at the Riverside Café. Emma was reading her favorite novel, and James accidentally spilled his coffee nearby. What started as an awkward apology turned into hours of conversation and laughter.</p>
+<p class="text-gray-700">Three years of adventures, challenges, and growth later, we're ready to begin our greatest journey yet—marriage.</p>
+</div>
+</div>
+<div class="flex flex-col md:flex-row-reverse items-center gap-8">
+<div class="w-full md:w-1/2">
+<div class="rounded-lg overflow-hidden shadow-lg">
+<img src="https://readdy.ai/api/search-image?query=romantic%20proposal%20scene%2C%20man%20on%20one%20knee%2C%20woman%20surprised%20with%20hands%20covering%20mouth%2C%20sunset%20beach%20setting%2C%20engagement%20ring%20box%2C%20emotional%20moment%2C%20waves%20gently%20crashing%2C%20professional%20photography%2C%20soft%20romantic%20lighting&width=600&height=400&seq=7&orientation=landscape" alt="The Proposal" class="w-full h-auto object-cover">
+</div>
+</div>
+<div class="w-full md:w-1/2">
+<h3 class="text-2xl text-primary mb-4 dancing-script">The Proposal</h3>
+<p class="text-gray-700 mb-4">After months of secret planning, James proposed during our trip to the coast. With the sunset painting the sky in shades of pink and orange, he got down on one knee on the same beach where we had our first vacation.</p>
+<p class="text-gray-700">Through happy tears, Emma said "yes," and we celebrated under the stars, dreaming of our future together.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Photo Gallery -->
+<section class="py-16 bg-white">
+<div class="container mx-auto px-4">
+<h2 class="text-3xl md:text-4xl text-center text-gray-800 mb-12 playfair">Our Favorite Moments</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gallery-grid">
+<div class="gallery-image rounded-lg overflow-hidden shadow-lg" data-img="https://readdy.ai/api/search-image?query=elegant%20couple%20dancing%20in%20formal%20attire%2C%20romantic%20evening%20setting%2C%20soft%20lighting%2C%20genuine%20smiles%2C%20professional%20photography%2C%20intimate%20moment%2C%20blurred%20background%2C%20warm%20tones%2C%20high-quality%20portrait&width=600&height=800&seq=8&orientation=portrait">
+<img src="https://readdy.ai/api/search-image?query=elegant%20couple%20dancing%20in%20formal%20attire%2C%20romantic%20evening%20setting%2C%20soft%20lighting%2C%20genuine%20smiles%2C%20professional%20photography%2C%20intimate%20moment%2C%20blurred%20background%2C%20warm%20tones%2C%20high-quality%20portrait&width=600&height=800&seq=8&orientation=portrait" alt="Dancing Together" class="w-full h-80 object-cover object-top">
+</div>
+<div class="gallery-image rounded-lg overflow-hidden shadow-lg" data-img="https://readdy.ai/api/search-image?query=couple%20hiking%20in%20mountains%2C%20adventure%20together%2C%20breathtaking%20landscape%20view%2C%20casual%20outdoor%20clothing%2C%20backpacks%2C%20holding%20hands%20on%20mountain%20summit%2C%20clear%20blue%20sky%2C%20candid%20moment%2C%20professional%20photography&width=600&height=800&seq=9&orientation=portrait">
+<img src="https://readdy.ai/api/search-image?query=couple%20hiking%20in%20mountains%2C%20adventure%20together%2C%20breathtaking%20landscape%20view%2C%20casual%20outdoor%20clothing%2C%20backpacks%2C%20holding%20hands%20on%20mountain%20summit%2C%20clear%20blue%20sky%2C%20candid%20moment%2C%20professional%20photography&width=600&height=800&seq=9&orientation=portrait" alt="Mountain Adventure" class="w-full h-80 object-cover object-top">
+</div>
+<div class="gallery-image rounded-lg overflow-hidden shadow-lg" data-img="https://readdy.ai/api/search-image?query=couple%20cooking%20together%20in%20modern%20kitchen%2C%20laughing%2C%20flour%20on%20faces%2C%20baking%20preparation%2C%20casual%20home%20setting%2C%20warm%20interior%20lighting%2C%20genuine%20happiness%2C%20cozy%20atmosphere%2C%20professional%20photography&width=600&height=800&seq=10&orientation=portrait">
+<img src="https://readdy.ai/api/search-image?query=couple%20cooking%20together%20in%20modern%20kitchen%2C%20laughing%2C%20flour%20on%20faces%2C%20baking%20preparation%2C%20casual%20home%20setting%2C%20warm%20interior%20lighting%2C%20genuine%20happiness%2C%20cozy%20atmosphere%2C%20professional%20photography&width=600&height=800&seq=10&orientation=portrait" alt="Cooking Together" class="w-full h-80 object-cover object-top">
+</div>
+<div class="gallery-image rounded-lg overflow-hidden shadow-lg" data-img="https://readdy.ai/api/search-image?query=couple%20at%20sunset%20beach%20picnic%2C%20wine%20glasses%2C%20romantic%20setting%2C%20blanket%20on%20sand%2C%20cheese%20and%20fruit%20platter%2C%20silhouettes%20against%20orange%20sky%2C%20intimate%20moment%2C%20professional%20photography&width=600&height=800&seq=11&orientation=portrait">
+<img src="https://readdy.ai/api/search-image?query=couple%20at%20sunset%20beach%20picnic%2C%20wine%20glasses%2C%20romantic%20setting%2C%20blanket%20on%20sand%2C%20cheese%20and%20fruit%20platter%2C%20silhouettes%20against%20orange%20sky%2C%20intimate%20moment%2C%20professional%20photography&width=600&height=800&seq=11&orientation=portrait" alt="Beach Picnic" class="w-full h-80 object-cover object-top">
+</div>
+<div class="gallery-image rounded-lg overflow-hidden shadow-lg" data-img="https://readdy.ai/api/search-image?query=couple%20in%20formal%20attire%20at%20elegant%20gala%20event%2C%20champagne%20toast%2C%20glamorous%20setting%2C%20chandelier%20lighting%2C%20sophisticated%20evening%20wear%2C%20professional%20photography%2C%20celebration%20moment%2C%20warm%20ambient%20lighting&width=600&height=800&seq=12&orientation=portrait">
+<img src="https://readdy.ai/api/search-image?query=couple%20in%20formal%20attire%20at%20elegant%20gala%20event%2C%20champagne%20toast%2C%20glamorous%20setting%2C%20chandelier%20lighting%2C%20sophisticated%20evening%20wear%2C%20professional%20photography%2C%20celebration%20moment%2C%20warm%20ambient%20lighting&width=600&height=800&seq=12&orientation=portrait" alt="Formal Event" class="w-full h-80 object-cover object-top">
+</div>
+<div class="gallery-image rounded-lg overflow-hidden shadow-lg" data-img="https://readdy.ai/api/search-image?query=couple%20with%20pet%20dog%20in%20autumn%20park%2C%20casual%20weekend%20attire%2C%20throwing%20frisbee%2C%20playful%20moment%2C%20golden%20retriever%2C%20fall%20foliage%2C%20genuine%20laughter%2C%20professional%20photography%2C%20natural%20outdoor%20setting&width=600&height=800&seq=13&orientation=portrait">
+<img src="https://readdy.ai/api/search-image?query=couple%20with%20pet%20dog%20in%20autumn%20park%2C%20casual%20weekend%20attire%2C%20throwing%20frisbee%2C%20playful%20moment%2C%20golden%20retriever%2C%20fall%20foliage%2C%20genuine%20laughter%2C%20professional%20photography%2C%20natural%20outdoor%20setting&width=600&height=800&seq=13&orientation=portrait" alt="Park Day" class="w-full h-80 object-cover object-top">
+</div>
+</div>
+</div>
+</section>
+<!-- Venue Information -->
+<section class="py-16 bg-secondary bg-opacity-20">
+<div class="container mx-auto px-4">
+<h2 class="text-3xl md:text-4xl text-center text-gray-800 mb-12 playfair">Wedding Details</h2>
+<div class="flex flex-col md:flex-row gap-8">
+<div class="w-full md:w-1/2 bg-white p-8 rounded-lg shadow-lg">
+<div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+<i class="ri-calendar-line ri-xl text-white"></i>
+</div>
+<h3 class="text-2xl text-center text-gray-800 mb-4">Ceremony & Reception</h3>
+<p class="text-center text-gray-700 mb-2"><strong>Date:</strong> Saturday, June 14, 2025</p>
+<p class="text-center text-gray-700 mb-2"><strong>Time:</strong> 4:00 PM - 11:00 PM</p>
+<p class="text-center text-gray-700 mb-2"><strong>Venue:</strong> The Rose Garden</p>
+<p class="text-center text-gray-700 mb-6"><strong>Address:</strong> 1234 Blossom Avenue, New York, NY</p>
+<p class="text-center text-gray-700 mb-4"><strong>Dress Code:</strong> Formal Attire</p>
+<div class="text-center">
+<a href="#" class="inline-block bg-primary text-white px-6 py-3 !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">View on Map</a>
+</div>
+</div>
+<div class="w-full md:w-1/2 bg-white p-8 rounded-lg shadow-lg">
+<div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+<i class="ri-information-line ri-xl text-white"></i>
+</div>
+<h3 class="text-2xl text-center text-gray-800 mb-4">Additional Information</h3>
+<div class="mb-6">
+<h4 class="text-lg font-semibold text-gray-800 mb-2">Accommodation</h4>
+<p class="text-gray-700">We've arranged special rates at Grand Hotel (0.5 miles from venue). Mention "Emma & James Wedding" when booking.</p>
+</div>
+<div class="mb-6">
+<h4 class="text-lg font-semibold text-gray-800 mb-2">Transportation</h4>
+<p class="text-gray-700">Complimentary shuttle service will be provided between the hotel and venue.</p>
+</div>
+<div>
+<h4 class="text-lg font-semibold text-gray-800 mb-2">Gifts</h4>
+<p class="text-gray-700">Your presence is our present. If you wish to give a gift, we have a registry available online.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- RSVP Section -->
+<section class="py-16 bg-white">
+<div class="container mx-auto px-4 max-w-3xl">
+<h2 class="text-3xl md:text-4xl text-center text-gray-800 mb-12 playfair">RSVP</h2>
+<form id="rsvpForm" class="bg-secondary bg-opacity-20 p-8 rounded-lg shadow-lg">
+<div class="mb-6">
+<label for="name" class="block text-gray-700 mb-2">Full Name</label>
+<input type="text" id="name" class="w-full px-4 py-3 rounded border-none focus:ring-2 focus:ring-primary" required>
+</div>
+<div class="mb-6">
+<label for="email" class="block text-gray-700 mb-2">Email Address</label>
+<input type="email" id="email" class="w-full px-4 py-3 rounded border-none focus:ring-2 focus:ring-primary" required>
+</div>
+<div class="mb-6">
+<label class="block text-gray-700 mb-2">Will you attend?</label>
+<div class="flex gap-4">
+<label class="flex items-center cursor-pointer">
+<div class="relative">
+<input type="radio" name="attendance" value="yes" class="opacity-0 absolute h-6 w-6" required>
+<div class="w-6 h-6 border-2 border-primary rounded-full flex items-center justify-center">
+<div class="attendance-radio-dot hidden w-3 h-3 bg-primary rounded-full"></div>
+</div>
+</div>
+<span class="ml-2 text-gray-700">Joyfully Accept</span>
+</label>
+<label class="flex items-center cursor-pointer">
+<div class="relative">
+<input type="radio" name="attendance" value="no" class="opacity-0 absolute h-6 w-6" required>
+<div class="w-6 h-6 border-2 border-primary rounded-full flex items-center justify-center">
+<div class="attendance-radio-dot hidden w-3 h-3 bg-primary rounded-full"></div>
+</div>
+</div>
+<span class="ml-2 text-gray-700">Regretfully Decline</span>
+</label>
+</div>
+</div>
+<div class="mb-6">
+<label for="guests" class="block text-gray-700 mb-2">Number of Guests (including yourself)</label>
+<select id="guests" class="w-full px-4 py-3 rounded border-none focus:ring-2 focus:ring-primary pr-8 appearance-none bg-white" required>
+<option value="">Select</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+</select>
+<div class="relative">
+<div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+<i class="ri-arrow-down-s-line text-gray-500"></i>
+</div>
+</div>
+</div>
+<div class="mb-6">
+<label for="dietary" class="block text-gray-700 mb-2">Dietary Restrictions</label>
+<textarea id="dietary" class="w-full px-4 py-3 rounded border-none focus:ring-2 focus:ring-primary h-24 resize-none"></textarea>
+</div>
+<div class="mb-6">
+<label for="message" class="block text-gray-700 mb-2">Message to the Couple (Optional)</label>
+<textarea id="message" class="w-full px-4 py-3 rounded border-none focus:ring-2 focus:ring-primary h-24 resize-none"></textarea>
+</div>
+<div class="text-center">
+<button type="submit" class="bg-primary text-white px-8 py-3 !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">Send RSVP</button>
+</div>
+</form>
+</div>
+</section>
+<!-- Registry Section -->
+<section class="py-16 bg-secondary bg-opacity-20">
+<div class="container mx-auto px-4">
+<h2 class="text-3xl md:text-4xl text-center text-gray-800 mb-12 playfair">Gift Registry</h2>
+<p class="text-center text-gray-700 max-w-2xl mx-auto mb-12">Your presence at our wedding is the greatest gift of all. However, if you wish to honor us with a gift, we've registered at the following places:</p>
+<div class="flex flex-wrap justify-center gap-8">
+<a href="#" class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center transition-transform hover:scale-105">
+<div class="w-16 h-16 flex items-center justify-center mb-4">
+<i class="ri-home-heart-fill ri-2x text-primary"></i>
+</div>
+<h3 class="text-xl text-gray-800 mb-2">Crate & Barrel</h3>
+<p class="text-primary">View Registry</p>
+</a>
+<a href="#" class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center transition-transform hover:scale-105">
+<div class="w-16 h-16 flex items-center justify-center mb-4">
+<i class="ri-store-2-fill ri-2x text-primary"></i>
+</div>
+<h3 class="text-xl text-gray-800 mb-2">Macy's</h3>
+<p class="text-primary">View Registry</p>
+</a>
+<a href="#" class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center transition-transform hover:scale-105">
+<div class="w-16 h-16 flex items-center justify-center mb-4">
+<i class="ri-gift-fill ri-2x text-primary"></i>
+</div>
+<h3 class="text-xl text-gray-800 mb-2">Amazon</h3>
+<p class="text-primary">View Registry</p>
+</a>
+<a href="#" class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center transition-transform hover:scale-105">
+<div class="w-16 h-16 flex items-center justify-center mb-4">
+<i class="ri-plane-fill ri-2x text-primary"></i>
+</div>
+<h3 class="text-xl text-gray-800 mb-2">Honeymoon Fund</h3>
+<p class="text-primary">Contribute</p>
+</a>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="py-12 bg-primary text-white">
+<div class="container mx-auto px-4 text-center">
+<h2 class="dancing-script text-4xl mb-6">Emma & James</h2>
+<p class="mb-8">We can't wait to celebrate with you!</p>
+<div class="flex justify-center gap-6 mb-8">
+<a href="#" class="w-10 h-10 rounded-full border border-white flex items-center justify-center hover:bg-white hover:text-primary transition-colors">
+<i class="ri-instagram-line"></i>
+</a>
+<a href="#" class="w-10 h-10 rounded-full border border-white flex items-center justify-center hover:bg-white hover:text-primary transition-colors">
+<i class="ri-facebook-line"></i>
+</a>
+<a href="#" class="w-10 h-10 rounded-full border border-white flex items-center justify-center hover:bg-white hover:text-primary transition-colors">
+<i class="ri-twitter-x-line"></i>
+</a>
+</div>
+<p class="text-sm opacity-80">© 2025 Emma & James Wedding</p>
+</div>
+</footer>
+</div>
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox">
+<img id="lightboxImage" src="" alt="Gallery Image" class="lightbox-image">
+<div class="close-lightbox" id="closeLightbox">
+<i class="ri-close-line"></i>
+</div>
+</div>
+<script>
+function startCountdown() {
+    const weddingDate = new Date('June 14, 2025 16:00:00').getTime();
+    const countdownInterval = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = weddingDate - now;
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById('days').innerHTML = days.toString().padStart(2, '0');
+        document.getElementById('hours').innerHTML = hours.toString().padStart(2, '0');
+        document.getElementById('minutes').innerHTML = minutes.toString().padStart(2, '0');
+        document.getElementById('seconds').innerHTML = seconds.toString().padStart(2, '0');
+
+        if (distance < 0) {
+            clearInterval(countdownInterval);
+            document.getElementById('days').innerHTML = '00';
+            document.getElementById('hours').innerHTML = '00';
+            document.getElementById('minutes').innerHTML = '00';
+            document.getElementById('seconds').innerHTML = '00';
+        }
+    }, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const videoPlayer = document.getElementById('videoPlayer');
+    const videoContainer = document.querySelector('.video-container');
+    const ctaButton = document.getElementById('ctaButton');
+    const mainContent = document.getElementById('mainContent');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const closeLightbox = document.getElementById('closeLightbox');
+    const rsvpForm = document.getElementById('rsvpForm');
+
+    // Video setup
+    videoPlayer.innerHTML = `
+        <source src="https://readdy.ai/api/search-image?query=romantic%20wedding%20video%20with%20soft%20lighting%2C%20elegant%20couple%20walking%20through%20garden%2C%20gentle%20breeze%20blowing%20through%20brides%20veil%2C%20soft%20focus%2C%20cinematic%20quality%2C%20emotional%20moments%2C%20natural%20setting%20with%20flowers%2C%20golden%20hour%20lighting&width=1920&height=1080&seq=1&orientation=landscape" type="video/mp4">
+        <audio id="backgroundMusic" autoplay loop>
+            <source src="https://public.readdy.ai/gen_page/romantic_background_music.mp3" type="audio/mpeg">
+        </audio>
+    `;
+
+    // Show CTA button after video ends or after 15 seconds
+    const showCTATimeout = setTimeout(() => {
+        ctaButton.classList.remove('hidden');
+    }, 15000);
+
+    videoPlayer.addEventListener('ended', function() {
+        clearTimeout(showCTATimeout);
+        ctaButton.classList.remove('hidden');
+    });
+
+    // Handle CTA button click
+    ctaButton.addEventListener('click', function() {
+        videoContainer.classList.add('hidden');
+        ctaButton.classList.add('hidden');
+        mainContent.classList.add('visible');
+        startCountdown();
+    });
+
+    // Unmute video on first interaction
+    document.addEventListener('click', function() {
+        videoPlayer.muted = false;
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        if (backgroundMusic) {
+            backgroundMusic.play();
+        }
+    }, { once: true });
+
+    // Start countdown if content is already visible
+    if (mainContent.classList.contains('visible')) {
+        startCountdown();
+    }
+
+    // Gallery lightbox
+    document.querySelectorAll('.gallery-image').forEach(image => {
+        image.addEventListener('click', function() {
+            const imgSrc = this.getAttribute('data-img');
+            lightboxImage.src = imgSrc;
+            lightbox.classList.add('active');
+        });
+    });
+
+    closeLightbox.addEventListener('click', () => lightbox.classList.remove('active'));
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            lightbox.classList.remove('active');
+        }
+    });
+
+    // Custom radio buttons
+    document.querySelectorAll('input[type="radio"]').forEach(input => {
+        input.addEventListener('change', function() {
+            document.querySelectorAll('.attendance-radio-dot').forEach(dot => {
+                dot.classList.add('hidden');
+            });
+            if (this.checked) {
+                const dot = this.nextElementSibling.querySelector('.attendance-radio-dot');
+                dot.classList.remove('hidden');
+            }
+        });
+    });
+
+    // Form submission
+    rsvpForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            attendance: document.querySelector('input[name="attendance"]:checked').value,
+            guests: document.getElementById('guests').value,
+            dietary: document.getElementById('dietary').value,
+            message: document.getElementById('message').value
+        };
+
+        // Create and show custom success message
+        const successMessage = document.createElement('div');
+        successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded shadow-lg';
+        successMessage.textContent = 'Thank you for your RSVP! We look forward to celebrating with you.';
+        document.body.appendChild(successMessage);
+
+        // Remove success message after 3 seconds
+        setTimeout(() => {
+            successMessage.remove();
+        }, 3000);
+
+        // Reset form
+        rsvpForm.reset();
+        document.querySelectorAll('.attendance-radio-dot').forEach(dot => {
+            dot.classList.add('hidden');
+        });
+    });
+});
+</script>
+</body>
+</html>
